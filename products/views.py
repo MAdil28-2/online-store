@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponse
 # Create your views here.
 from datetime import datetime
 
-from products.models import Product
+from products.models import Product, Review
 
 
 def hello(request):
@@ -33,3 +33,15 @@ def products_view(request):
         }
         return render(request, 'products/products.html', context=context)
 
+
+def products_detail_view(request, id):
+    if request.method == 'GET':
+        product = Product.objects.get(id=id)
+        context = {
+            'product': product,
+            'review': product.review_set.all(),
+        }
+        return render(request, 'products/detail.html', context=context)
+
+    reviews = Review.objects.all()
+    return render(request, 'products/detail.html', context={'reviews': reviews})
